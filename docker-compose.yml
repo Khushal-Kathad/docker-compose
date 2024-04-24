@@ -1,0 +1,39 @@
+version: "3"
+services:
+  frontend:
+    container_name:  21bcp241-frontend
+    image: khushal01174/21bcp241-frontend
+    volumes:
+      - "./frontend:/usr/local/apache2/htdocs"
+    ports:
+      - 3000:80
+  backend:
+    container_name:  21bcp241-backend
+    # build:
+    #   context: ./
+    #   dockerfile: Dockerfile
+    image: khushal01174/21bcp241-backend
+    volumes:
+      - "./api:/var/www/html/"
+    ports:
+      - 5000:80
+  database:
+    container_name:  21bcp241-database
+    image: khushal01174/21bcp241-database
+    environment:
+      MYSQL_DATABASE: todo_app
+      MYSQL_USER: todo_admin
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+  phpmyadmin:
+    container_name:  21bcp241-databasemanagement
+    image: khushal01174/21bcp241-databasemanagement
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=database
+      - PMA_PORT=3306
+    depends_on:
+      - database
